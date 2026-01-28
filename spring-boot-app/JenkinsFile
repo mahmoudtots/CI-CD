@@ -32,7 +32,7 @@ pipeline {
         SONAR_URL = "http://192.168.152.133:9000"
       }
       steps {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+        withCredentials([string(credentialsId: 'sonar-qube-token', variable: 'SONAR_AUTH_TOKEN')]) {
           sh '''
             cd spring-boot-app
             mvn clean verify sonar:sonar \
