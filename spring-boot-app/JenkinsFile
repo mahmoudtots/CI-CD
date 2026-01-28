@@ -5,8 +5,7 @@ pipeline {
 
     stage('Checkout') {
       steps {
-        echo "Checkout done"
-        // git branch: 'main', url: 'https://github.com/habdelazim743-collab/JENKINS-END-TO-END-CICD-Implementation.git'
+         git branch: 'main', url: 'git@github.com:mahmoudtots/CI-CD.git'
       }
     }
 
@@ -30,7 +29,7 @@ pipeline {
 
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://192.168.164.129:9000"
+        SONAR_URL = "http://192.168.152.133:9000"
       }
       steps {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -48,7 +47,7 @@ pipeline {
 
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "habdelazim/jenkins-demo:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "mahmoudtots/jenkins-demo:${BUILD_NUMBER}"
       }
       steps {
         script {
@@ -61,29 +60,4 @@ pipeline {
         }
       }
     }
-
-    stage('Update Deployment File') {
-      environment {
-        GIT_REPO_NAME = "JENKINS-END-TO-END-CICD-Implementation.git"
-        GIT_USER_NAME = "habdelazim743-collab"
-      }
-      steps {
-        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-          sh '''
-            git checkout main
-            git pull origin main
-            git config user.email "habdelazim743@gmail.com"
-            git config user.name "habdelazim743-collab"
-
-            sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
-            git add spring-boot-app-manifests/deployment.yml
-            git diff --cached --quiet || git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-          '''
-        }
-      }
-    }
-
-  }
-}
 
