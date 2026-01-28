@@ -57,6 +57,25 @@ pipeline {
      }
    }
 
+stage('Update Image Tag') {
+  steps {
+    withCredentials([sshUserPrivateKey(
+      credentialsId: 'github-ssh',
+      keyFileVariable: 'SSH_KEY'
+    )]) {
+      sh '''
+        git config user.email "mahmoudyousef6868@gmail.com"
+        git config user.name "mahmoudtots"
+
+        sed -i "s/REPLACE_TAG/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
+
+        git add spring-boot-app-manifests/deployment.yml
+        git commit -m "Update image tag to ${BUILD_NUMBER}"
+        git push origin main
+      '''
+    }
+  }
+}
 
 
   }
