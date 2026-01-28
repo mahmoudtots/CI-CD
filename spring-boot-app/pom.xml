@@ -29,9 +29,9 @@
 
     <distributionManagement>
         <repository>
-            <id>maven-snapshots</id>
+            <id>nti-cicd</id>
             <name>Nexus Release Repository</name>
-            <url>http://192.168.152.133:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.152.133:8081/repository/nti-cicd/</url>
         </repository>
     </distributionManagement>
 
